@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
@@ -16,13 +17,16 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
+
+        $user = $request->user();
+        if (!$user) {
             return redirect()->route('login');
         }
 
-        if (Auth::user()->role !== 'admin') {
+        if ($user->role !== 'admin') {
 
-            abort(403, 'Unauthorized action.');
+            Log::warning("Unauthorized access attempt by user ID: {$user->id}");
+            abort(403, 'You are not authorized to access this area.');
         }
 
         return $next($request);

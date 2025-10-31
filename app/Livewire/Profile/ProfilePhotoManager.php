@@ -20,7 +20,7 @@ class ProfilePhotoManager extends Component
         ]);
 
         if (!$this->photo) {
-            session()->flash('photo_error', __('الرجاء اختيار صورة أولاً.'));
+            session()->flash('photo_error', __('Please choose image'));
             return;
         }
 
@@ -36,7 +36,7 @@ class ProfilePhotoManager extends Component
         $user->save();
 
         $this->reset('photo');
-        session()->flash('photo_success', __('تم تحديث صورة الملف الشخصي بنجاح.'));
+        session()->flash('photo_success', __('Image was saved successfully'));
     }
 
 
@@ -50,7 +50,7 @@ class ProfilePhotoManager extends Component
             $user->save();
         }
 
-        session()->flash('photo_success', __('تم حذف صورة الملف الشخصي بنجاح.'));
+        session()->flash('photo_deleted', __('Image was deleted successfully'));
     }
 
     public function render()

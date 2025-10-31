@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Auth;
 
-use Illuminate\Support\Facades\Auth;
+use App\Services\PasswordConfirmationService;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
@@ -13,20 +13,14 @@ class ConfirmPassword extends Component
 
     public function confirmPassword(): void
     {
-        $this->validate([
-            'password' => ['required', 'string'],
-        ]);
+        $service = app(PasswordConfirmationService::class);
 
-        if (! Auth::guard('web')->validate([
-            'email' => Auth::user()->email,
-            'password' => $this->password,
-        ])) {
-            throw ValidationException::withMessages([
-                'password' => __('auth.password'),
-            ]);
+        try {
+            $service->confirm($this->password);
+            $this->redirectIntended(route('dashboard'));
+        } catch (ValidationException $e) {
+            $this->addError('password', __('auth.password'));
         }
-
-        session(['auth.password_confirmed_at' => time()]);
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }

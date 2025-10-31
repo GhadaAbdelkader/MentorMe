@@ -21,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'phone',
         'role',
         'status',
         'profile_photo_path',
@@ -35,7 +36,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'profile_photo_path',
     ];
-
+    public static array $profileFields = [
+        'name',
+        'email',
+        'password',
+        'phone',
+    ];
     /**
      *
      * @var array<int, string>
@@ -54,7 +60,21 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    public function completionItems(): array
+    {
+        $fields = self::$profileFields;
+        $items = [];
 
+        foreach ($fields as $field) {
+            $label = ucwords(str_replace('_', ' ', $field));
+            $items[] = [
+                'field' => $field,
+                'label' => $label,
+                'filled' => !empty($this->{$field}) && $this->{$field} !== '[]',
+            ];
+        }
+        return $items;
+    }
 
     public function mentorProfile(): HasOne
     {

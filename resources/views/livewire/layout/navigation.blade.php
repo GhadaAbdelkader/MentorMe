@@ -38,8 +38,15 @@ new class extends Component
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
+                <x-dropdown align="right" width="48" >
                     <x-slot name="trigger">
+                        <div class="flex justify-between">
+                        <img src="{{ Auth::user()->profile_photo_path
+                                    ? asset('storage/' . Auth::user()->profile_photo_path)
+                                    : asset('storage/profile-photos/Male.jpg') }}"
+                             alt="{{ Auth::user()->name }}"
+                             class="h-10 w-10 object-cover rounded-full border-2 border-gray-200 shadow-xl transition-all duration-300">
+
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
@@ -49,12 +56,32 @@ new class extends Component
                                 </svg>
                             </div>
                         </button>
+                    </div>
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile')" wire:navigate>
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        @php
+                            $role = Auth::user()->role;
+                        @endphp
+
+                        @if ($role === 'admin')
+                            <x-dropdown-link :href="route('admin.profile')" wire:navigate>
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @elseif ($role === 'mentor')
+                            <x-dropdown-link :href="route('mentor.profile')" wire:navigate>
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @elseif ($role === 'mentee')
+                            <x-dropdown-link :href="route('mentee.profile')" wire:navigate>
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @else
+                            <x-dropdown-link :href="route('profile')" wire:navigate>
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @endif
+
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
@@ -95,7 +122,7 @@ new class extends Component
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    {{ __('Profile') }}
+                    {{ __('AdminProfile') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->

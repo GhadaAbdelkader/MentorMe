@@ -3,10 +3,8 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Services\UserRegistrationService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Livewire\Component;
@@ -33,14 +31,11 @@ class Register extends Component
     {
         $validated = $this->validate();
 
-        $validated['password'] = Hash::make($validated['password']);
-
         $validated['role'] = $this->role;
-        $validated['is_active'] = false;
 
-        event(new Registered($user = User::create($validated)));
+        $service = app(\App\Services\UserRegistrationService::class);
 
-        Auth::login($user);
+        $user = $service->register($validated);
 
         if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
             $this->redirect(route('verification.notice', absolute: false), navigate: true);

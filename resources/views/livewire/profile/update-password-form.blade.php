@@ -1,44 +1,6 @@
-<?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\ValidationException;
-use Livewire\Volt\Component;
 
-new class extends Component
-{
-    public string $current_password = '';
-    public string $password = '';
-    public string $password_confirmation = '';
-
-    /**
-     * Update the password for the currently authenticated user.
-     */
-    public function updatePassword(): void
-    {
-        try {
-            $validated = $this->validate([
-                'current_password' => ['required', 'string', 'current_password'],
-                'password' => ['required', 'string', Password::defaults(), 'confirmed'],
-            ]);
-        } catch (ValidationException $e) {
-            $this->reset('current_password', 'password', 'password_confirmation');
-
-            throw $e;
-        }
-
-        Auth::user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        $this->reset('current_password', 'password', 'password_confirmation');
-
-        $this->dispatch('password-updated');
-    }
-}; ?>
-
-<section>
+<section class="relative w-full">
     <header>
         <h2 class="text-lg font-medium text-gray-900">
             {{ __('Update Password') }}
@@ -48,7 +10,26 @@ new class extends Component
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </p>
     </header>
-
+    @if (session()->has('password_success'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 4000)"
+            class="p-4 absolute right-0 top-0 mb-8 rounded-lg bg-green-100 border border-green-400 text-green-700 font-medium"
+            role="alert">
+            {{ session('password_success') }}
+        </div>
+    @endif
+    @if (session()->has('password_error'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 4000)"
+            class="p-4 absolute right-0 top-0 mb-8 rounded-lg bg-green-100 border border-green-400 text-green-700 font-medium"
+            role="alert">
+            {{ session('password_error') }}
+        </div>
+    @endif
     <form wire:submit="updatePassword" class="mt-6 space-y-6">
         <div>
             <x-input-label for="update_password_current_password" :value="__('Current Password')" />
@@ -68,12 +49,12 @@ new class extends Component
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+        <div class="flex items-center justify-end mt-4">
+            <x-success-button>{{ __('Save') }}</x-success-button>
 
-            <x-action-message class="me-3" on="password-updated">
-                {{ __('Saved.') }}
-            </x-action-message>
+{{--            <x-action-message class="me-3" on="password-updated">--}}
+{{--                {{ __('Saved.') }}--}}
+{{--            </x-action-message>--}}
         </div>
     </form>
 </section>
