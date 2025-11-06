@@ -19,14 +19,9 @@ class AdminMiddleware
     {
 
         $user = $request->user();
-        if (!$user) {
+        if (!$user ||  $user->role !== 'admin') {
             return redirect()->route('login');
-        }
 
-        if ($user->role !== 'admin') {
-
-            Log::warning("Unauthorized access attempt by user ID: {$user->id}");
-            abort(403, 'You are not authorized to access this area.');
         }
 
         return $next($request);
