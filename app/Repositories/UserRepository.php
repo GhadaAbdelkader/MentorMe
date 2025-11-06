@@ -2,10 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Models\Mentor;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use App\Contracts\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Modules\User\Models\Mentor;
+use modules\user\Models\User;
 
 class UserRepository implements UserRepositoryInterface
 {
