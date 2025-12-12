@@ -1,14 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\User\Http\Controllers\Auth\VerifyEmailController;
+use Modules\User\Livewire\Auth\ConfirmPassword;
 use Modules\User\Livewire\Auth\Login;
 use Modules\User\Livewire\Auth\Register;
 use Modules\User\Livewire\Admin\UserProfileViewer;
 use Modules\User\Livewire\Admin\AdminProfile;
+use Modules\User\Livewire\Auth\VerifyEmail;
 use Modules\User\Livewire\Mentor\MentorProfile;
 use Modules\User\Livewire\Mentee\MenteeProfile;
 use Modules\User\Livewire\Admin\UserManagement;
 
+use Modules\User\Livewire\Session\{
+    Sessions,
+    CreateSession,
+    ModifySession,
+    ShowSession
+};
 Route::view('/', 'welcome');
 
 Route::view('dashboard', 'dashboard')
@@ -51,3 +60,29 @@ Route::view('profile', 'profile')
 Route::get('/user/{userId}/profile', UserProfileViewer::class)
     ->middleware(['auth', 'verified'])
     ->name('profile.show');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('sessions/create', CreateSession::class)
+        ->name('session.create');
+
+    Route::get('sessions', Sessions::class)
+        ->name('session.index');
+
+    Route::get('sessions/{id}/edit', ModifySession::class)
+        ->name('session.edit');
+
+    Route::get('sessions/{id}', ShowSession::class)
+        ->name('session.show');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('verify-email', VerifyEmail::class)
+        ->name('verification.notice');
+
+    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+
+    Route::get('confirm-password', ConfirmPassword::class)
+        ->name('password.confirm');
+});

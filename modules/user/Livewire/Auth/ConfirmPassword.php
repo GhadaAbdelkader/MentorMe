@@ -2,7 +2,7 @@
 
 namespace Modules\User\Livewire\Auth;
 
-use App\Services\PasswordConfirmationService;
+use Modules\User\Services\PasswordConfirmationService;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
