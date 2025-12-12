@@ -60,6 +60,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+
+
     public function completionItems(): array
     {
         $fields = self::$profileFields;

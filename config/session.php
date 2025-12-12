@@ -60,7 +60,7 @@ return [
     |
     */
 
-    'files' => storage_path('framework/sessions'),
+    'files' => storage_path('framework/session'),
 
     /*
     |--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When using the "database" or "redis" session drivers, you may specify a
-    | connection that should be used to manage these sessions. This should
+    | connection that should be used to manage these session. This should
     | correspond to a connection in your database configuration options.
     |
     */
@@ -81,7 +81,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When using the "database" session driver, you may specify the table to
-    | be used to store sessions. Of course, a sensible default is defined
+    | be used to store session. Of course, a sensible default is defined
     | for you; however, you're welcome to change this to another table.
     |
     */
@@ -109,7 +109,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Some session drivers must manually sweep their storage location to get
-    | rid of old sessions from storage. Here are the chances that it will
+    | rid of old session from storage. Here are the chances that it will
     | happen on a given request. By default, the odds are 2 out of 100.
     |
     */

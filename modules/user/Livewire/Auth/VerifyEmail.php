@@ -3,7 +3,7 @@
 namespace Modules\User\Livewire\Auth;
 
 use Modules\User\Livewire\Actions\Logout;
-use App\Services\EmailVerificationService;
+use Modules\User\Services\EmailVerificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
